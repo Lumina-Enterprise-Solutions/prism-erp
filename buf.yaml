@@ -1,0 +1,34 @@
+# buf.yaml
+version: v1
+breaking:
+  use:
+  - FILE
+lint:
+  use:
+  - DEFAULT
+  except:
+  - ENUM_VALUE_PREFIX
+  - ENUM_ZERO_VALUE_SUFFIX
+---
+# buf.gen.yaml
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/yourorg/prism/proto
+plugins:
+- plugin: go
+  out: .
+  opt:
+  - paths=source_relative
+
+- plugin: go-grpc
+  out: .
+  opt:
+  - paths=source_relative
+  - require_unimplemented_servers=false
+---
+# buf.work.yaml
+version: v1
+directories:
+- proto

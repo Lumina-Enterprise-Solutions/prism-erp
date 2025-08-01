@@ -1,0 +1,39 @@
+# deployments/kind/cluster-config.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: prism-dev
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  # API Gateway
+  - containerPort: 30080
+    hostPort: 8080
+    protocol: TCP
+  # PostgreSQL
+  - containerPort: 30432
+    hostPort: 5432
+    protocol: TCP
+  # Redis
+  - containerPort: 30379
+    hostPort: 6379
+    protocol: TCP
+  # MinIO API
+  - containerPort: 30900
+    hostPort: 9000
+    protocol: TCP
+  # MinIO Console
+  - containerPort: 30901
+    hostPort: 9001
+    protocol: TCP
+  # RabbitMQ Management
+  - containerPort: 31572
+    hostPort: 15672
+    protocol: TCP
+- role: worker
+- role: worker
